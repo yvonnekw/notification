@@ -27,62 +27,78 @@ public class NotificationConsumer {
 
     @KafkaListener(topics = "payment-topic")
     public void consumePaymentSuccessNotification(PaymentConfirmation paymentConfirmation) throws MessagingException {
-        log.info(format("Consuming the message from payment-topic Topic:: %s", paymentConfirmation));
-        notificationRepository.save(
-                Notification.builder()
-                        .type(PAYMENT_CONFIRMATION)
-                        .notificationDate(LocalDateTime.now())
-                        .paymentConfirmation((paymentConfirmation))
-                        .build()
-        );
+        try {
+            log.info(format("Consuming the message from payment-topic Topic:: %s", paymentConfirmation));
+            notificationRepository.save(
+                    Notification.builder()
+                            .type(PAYMENT_CONFIRMATION)
+                            .notificationDate(LocalDateTime.now())
+                            .paymentConfirmation((paymentConfirmation))
+                            .build()
+            );
 
-        var userFullName = paymentConfirmation.userFirstName() + " " + paymentConfirmation.userLastName();
-        emailService.sendPaymentSuccessEmail(
-                paymentConfirmation.userEmail(),
-                userFullName,
-                paymentConfirmation.totalAmount(),
-                paymentConfirmation.orderReference()
-        );
+            var userFullName = paymentConfirmation.userFirstName() + " " + paymentConfirmation.userLastName();
+            emailService.sendPaymentSuccessEmail(
+                    paymentConfirmation.userEmail(),
+                    userFullName,
+                    paymentConfirmation.totalAmount(),
+                    paymentConfirmation.orderReference()
+            );
+
+        } catch (Exception e) {
+            log.error("Failed to process payment success notification for order: {}", paymentConfirmation.orderReference(), e);
+        }
     }
 
     @KafkaListener(topics = "order-topic")
     public void consumeOrderConfirmationNotification(OrderConfirmation orderConfirmation) throws MessagingException {
-        log.info(format("Consuming the message from order-topic Topic:: %s", orderConfirmation));
-        notificationRepository.save(
-                Notification.builder()
-                        .type(ORDER_CONFIRMATION)
-                        .notificationDate(LocalDateTime.now())
-                        .orderConfirmation((orderConfirmation))
-                        .build()
-        );
-        var userFullName = orderConfirmation.user().firstName() + " " + orderConfirmation.user().lastName();
-        emailService.sendOrderConfirmationEmail(
-                orderConfirmation.user().emailAddress(),
-                userFullName,
-                orderConfirmation.totalAmount(),
-                orderConfirmation.orderReference(),
-                orderConfirmation.products()
-        );
+        try {
+            log.info(format("Consuming the message from order-topic Topic:: %s", orderConfirmation));
+            notificationRepository.save(
+                    Notification.builder()
+                            .type(ORDER_CONFIRMATION)
+                            .notificationDate(LocalDateTime.now())
+                            .orderConfirmation((orderConfirmation))
+                            .build()
+            );
+            var userFullName = orderConfirmation.user().firstName() + " " + orderConfirmation.user().lastName();
+            emailService.sendOrderConfirmationEmail(
+                    orderConfirmation.user().emailAddress(),
+                    userFullName,
+                    orderConfirmation.totalAmount(),
+                    orderConfirmation.orderReference(),
+                    orderConfirmation.products()
+            );
+
+        } catch (Exception e) {
+            log.error("Failed to process order notification for order: {}", orderConfirmation.orderReference(), e);
+        }
     }
 
-    @KafkaListener(topics = "bid-topic")
-    public void consumeBidConfirmationNotification(BidWinnerConfirmation bidWinnerConfirmation) throws MessagingException {
-        log.info(format("Consuming the message from bid-topic Topic:: %s", bidWinnerConfirmation));
-        notificationRepository.save(
-                Notification.builder()
-                        .type(BID_WINNER_CONFIRMATION)
-                        .notificationDate(LocalDateTime.now())
-                        .bidWinnerConfirmation((bidWinnerConfirmation))
-                        .build()
-        );
-        var userFullName = bidWinnerConfirmation.user().firstName() + " " + bidWinnerConfirmation.user().lastName();
-        emailService.sendBidConfirmationEmail(
-                bidWinnerConfirmation.user().emailAddress(),
-                userFullName,
-                bidWinnerConfirmation.bigAmount(),
-                bidWinnerConfirmation.bidId(),
-                bidWinnerConfirmation.product()
+    @KafkaListener(topics = "bid-winner-topic")
+    public void consumeBidWinnerConfirmationNotification(BidWinnerConfirmation bidWinnerConfirmation) throws MessagingException {
+        try {
+            log.info(format("Consuming the message from bid-winner-topic Topic:: %s", bidWinnerConfirmation));
+            notificationRepository.save(
+                    Notification.builder()
+                            .type(BID_WINNER_CONFIRMATION)
+                            .notificationDate(LocalDateTime.now())
+                            .bidWinnerConfirmation((bidWinnerConfirmation))
+                            .build()
+            );
+            var userFullName = bidWinnerConfirmation.user().firstName() + " " + bidWinnerConfirmation.user().lastName();
+            emailService.sendBidWinnerConfirmationEmail(
+                    bidWinnerConfirmation.user().emailAddress(),
+                    userFullName,
+                    bidWinnerConfirmation.bigAmount(),
+                    bidWinnerConfirmation.winningBidId(),
+                    bidWinnerConfirmation.product()
 
-        );
+            );
+
+
+        } catch (Exception e) {
+            log.error("Failed to process bid winner notification: {}", bidWinnerConfirmation.winningBidId(), e);
+        }
     }
 }

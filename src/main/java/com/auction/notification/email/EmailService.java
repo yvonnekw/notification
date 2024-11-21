@@ -97,7 +97,7 @@ public class EmailService {
         }
     }
     @Async
-    public void sendBidConfirmationEmail(
+    public void sendBidWinnerConfirmationEmail(
             String destinationEmail,
             String userFullName,
             BigDecimal bidAmount,

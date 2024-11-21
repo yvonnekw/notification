@@ -6,7 +6,7 @@ import com.auction.notification.kafka.order.User;
 import java.math.BigDecimal;
 
 public record BidWinnerConfirmation(
-        Long bidId,
+        Long winningBidId,
         User user,
         Product product,
         BigDecimal bigAmount
