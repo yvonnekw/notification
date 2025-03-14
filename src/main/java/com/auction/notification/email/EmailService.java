@@ -1,6 +1,7 @@
 package com.auction.notification.email;
 
 import com.auction.notification.kafka.order.Product;
+import com.auction.notification.kafka.payment.PaymentMethod;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -65,9 +66,12 @@ public class EmailService {
     @Async
     public void sendOrderConfirmationEmail(
             String destinationEmail,
-            String userFullName,
+            String username,
+            String firstName,
+            String lastName,
             BigDecimal amount,
             String orderReference,
+            PaymentMethod paymentMethod,
             List<Product> products
     ) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -77,9 +81,12 @@ public class EmailService {
         final String templateName = ORDER_CONFIRMATION.getTemplate();
 
         Map<String, Object> variables = new HashMap<>();
-        variables.put("userName", userFullName);
+        variables.put("userName", username);
+        variables.put("firstName", firstName);
+        variables.put("lastName", lastName);
         variables.put("totalAmount", amount);
         variables.put("orderReference", orderReference);
+        variables.put("paymentMethod", paymentMethod);
         variables.put("products", products);
         Context context = new Context();
         context.setVariables(variables);

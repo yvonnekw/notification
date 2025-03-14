@@ -61,12 +61,15 @@ public class NotificationConsumer {
                             .orderConfirmation((orderConfirmation))
                             .build()
             );
-            var userFullName = orderConfirmation.user().firstName() + " " + orderConfirmation.user().lastName();
+order transaction det           // var userFullName = orderConfirmation.user().firstName() + " " + orderConfirmation.user().lastName();
             emailService.sendOrderConfirmationEmail(
-                    orderConfirmation.user().emailAddress(),
-                    userFullName,
+                    orderConfirmation.email(),
+                    orderConfirmation.username(),
+                    orderConfirmation.firstName(),
+                    orderConfirmation.lastName(),
                     orderConfirmation.totalAmount(),
                     orderConfirmation.orderReference(),
+                    orderConfirmation.paymentMethod(),
                     orderConfirmation.products()
             );
 

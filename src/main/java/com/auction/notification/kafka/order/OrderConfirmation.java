@@ -10,7 +10,10 @@ public record OrderConfirmation(
         String orderReference,
         BigDecimal totalAmount,
         PaymentMethod paymentMethod,
-       User user,
+        String username,
+        String firstName,
+        String lastName,
+        String email,
         List<Product> products
 ) {
 }
