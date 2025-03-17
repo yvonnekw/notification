@@ -3,6 +3,7 @@ package com.auction.notification.notification;
 import com.auction.notification.kafka.bid.BidWinnerConfirmation;
 import com.auction.notification.kafka.order.OrderConfirmation;
 import com.auction.notification.kafka.payment.PaymentConfirmation;
+import com.auction.notification.kafka.payment.PaymentNotificationRequest;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -19,11 +20,11 @@ import java.time.LocalDateTime;
 public class Notification {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+   // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
     private NotificationType type;
     private LocalDateTime notificationDate;
     private OrderConfirmation orderConfirmation;
-    private PaymentConfirmation paymentConfirmation;
+    private PaymentNotificationRequest paymentConfirmation;
     private BidWinnerConfirmation bidWinnerConfirmation;
 }

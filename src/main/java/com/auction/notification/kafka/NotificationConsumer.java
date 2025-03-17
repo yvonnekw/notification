@@ -4,6 +4,7 @@ import com.auction.notification.email.EmailService;
 import com.auction.notification.kafka.bid.BidWinnerConfirmation;
 import com.auction.notification.kafka.order.OrderConfirmation;
 import com.auction.notification.kafka.payment.PaymentConfirmation;
+import com.auction.notification.kafka.payment.PaymentNotificationRequest;
 import com.auction.notification.notification.Notification;
 import com.auction.notification.notification.NotificationRepository;
 import jakarta.mail.MessagingException;
@@ -25,8 +26,8 @@ public class NotificationConsumer {
     private final NotificationRepository notificationRepository;
     private final EmailService emailService;
 
-    @KafkaListener(topics = "payment-topic")
-    public void consumePaymentSuccessNotification(PaymentConfirmation paymentConfirmation) throws MessagingException {
+    @KafkaListener(topics = "payment-topic", groupId = "paymentGroup")
+    public void consumePaymentSuccessNotification(PaymentNotificationRequest paymentConfirmation) throws MessagingException {
         try {
             log.info(format("Consuming the message from payment-topic Topic:: %s", paymentConfirmation));
             notificationRepository.save(
@@ -37,12 +38,15 @@ public class NotificationConsumer {
                             .build()
             );
 
-            var userFullName = paymentConfirmation.userFirstName() + " " + paymentConfirmation.userLastName();
+           // var userFullName = paymentConfirmation.userFirstName() + " " + paymentConfirmation.userLastName();
             emailService.sendPaymentSuccessEmail(
-                    paymentConfirmation.userEmail(),
-                    userFullName,
+                    paymentConfirmation.orderReference(),
                     paymentConfirmation.totalAmount(),
-                    paymentConfirmation.orderReference()
+                    paymentConfirmation.paymentMethod(),
+                    paymentConfirmation.username(),
+                    paymentConfirmation.userFirstName(),
+                    paymentConfirmation.userLastName(),
+                    paymentConfirmation.userEmail()
             );
 
         } catch (Exception e) {
@@ -50,7 +54,7 @@ public class NotificationConsumer {
         }
     }
 
-    @KafkaListener(topics = "order-topic")
+    @KafkaListener(topics = "order-topic", groupId = "orderGroup")
     public void consumeOrderConfirmationNotification(OrderConfirmation orderConfirmation) throws MessagingException {
         try {
             log.info(format("Consuming the message from order-topic Topic:: %s", orderConfirmation));
@@ -61,7 +65,7 @@ public class NotificationConsumer {
                             .orderConfirmation((orderConfirmation))
                             .build()
             );
-order transaction det           // var userFullName = orderConfirmation.user().firstName() + " " + orderConfirmation.user().lastName();
+            //var userFullName = orderConfirmation.userFirstName() + " " + paymentConfirmation.userLastName();
             emailService.sendOrderConfirmationEmail(
                     orderConfirmation.email(),
                     orderConfirmation.username(),
@@ -78,7 +82,7 @@ order transaction det           // var userFullName = orderConfirmation.user().f
         }
     }
 
-    @KafkaListener(topics = "bid-winner-topic")
+    @KafkaListener(topics = "bid-winner-topic" , groupId = "bidGroup")
     public void consumeBidWinnerConfirmationNotification(BidWinnerConfirmation bidWinnerConfirmation) throws MessagingException {
         try {
             log.info(format("Consuming the message from bid-winner-topic Topic:: %s", bidWinnerConfirmation));
