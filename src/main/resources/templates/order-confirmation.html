@@ -70,9 +70,9 @@
         </thead>
         <tbody>
         <tr th:each="product : ${products}">
-            <td th:text="${product.name}"></td>
+            <td th:text="${product.productName}"></td>
             <td th:text="${product.quantity}"></td>
-            <td th:text="${product.price}"></td>
+            <td th:text="${product.buyNowPrice}"></td>
         </tr>
         </tbody>
     </table>

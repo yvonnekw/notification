@@ -32,10 +32,13 @@ public class EmailService {
 
     @Async
     public void sendPaymentSuccessEmail(
-            String destinationEmail,
-            String userFullName,
+            String orderReference,
             BigDecimal amount,
-            String orderReference
+            PaymentMethod paymentMethod,
+            String username,
+            String userFirstName,
+            String userLastName,
+            String destinationEmail
     ) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper messageHelper =
@@ -44,9 +47,12 @@ public class EmailService {
         final String templateName = PAYMENT_CONFIRMATION.getTemplate();
 
         Map<String, Object> variables = new HashMap<>();
-        variables.put("userName", userFullName);
-        variables.put("totalAmount", amount);
         variables.put("orderReference", orderReference);
+        variables.put("totalAmount", amount);
+        variables.put("paymentMethod", paymentMethod);
+        variables.put("username", username);
+        variables.put("userFirstName", userFirstName);
+        variables.put("userLastName", userLastName);
         Context context = new Context();
         context.setVariables(variables);
         messageHelper.setSubject(PAYMENT_CONFIRMATION.getSubject());
