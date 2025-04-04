@@ -14,6 +14,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,11 +112,18 @@ public class EmailService {
     }
     @Async
     public void sendBidWinnerConfirmationEmail(
-            String destinationEmail,
-            String userFullName,
-            BigDecimal bidAmount,
+            Long winningBidId,
             Long bidId,
-            Product product
+            String username,
+            String userFirstName,
+            String userLastName,
+            String destinationEmail,
+            BigDecimal bidAmount,
+            LocalDateTime bidTime,
+            Long productId,
+            String productName,
+            String brandName,
+            String description
     ) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper messageHelper =
@@ -124,10 +132,18 @@ public class EmailService {
         final String templateName = BID_WINNER_CONFIRMATION.getTemplate();
 
         Map<String, Object> variables = new HashMap<>();
-        variables.put("userName", userFullName);
-        variables.put("bidAmount", bidAmount);
+        variables.put("winningBidId", winningBidId);
         variables.put("bidId", bidId);
-        variables.put("product", product);
+        variables.put("username", username);
+        variables.put("userFirstName", userFirstName);
+        variables.put("userLastName", userLastName);
+        variables.put("destinationEmail", destinationEmail);
+        variables.put("bidAmount", bidAmount);
+        variables.put("bidTime", bidTime);
+        variables.put("productId", productId);
+        variables.put("productName", productName);
+        variables.put("brandName", brandName);
+        variables.put("description", description);
         Context context = new Context();
         context.setVariables(variables);
         messageHelper.setSubject(ORDER_CONFIRMATION.getSubject());

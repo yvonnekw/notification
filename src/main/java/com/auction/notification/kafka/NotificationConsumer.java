@@ -93,14 +93,20 @@ public class NotificationConsumer {
                             .bidWinnerConfirmation((bidWinnerConfirmation))
                             .build()
             );
-            var userFullName = bidWinnerConfirmation.user().firstName() + " " + bidWinnerConfirmation.user().lastName();
+            //var userFullName = bidWinnerConfirmation.user().firstName() + " " + bidWinnerConfirmation.user().lastName();
             emailService.sendBidWinnerConfirmationEmail(
-                    bidWinnerConfirmation.user().emailAddress(),
-                    userFullName,
-                    bidWinnerConfirmation.bigAmount(),
                     bidWinnerConfirmation.winningBidId(),
-                    bidWinnerConfirmation.product()
-
+                    bidWinnerConfirmation.bidId(),
+                    bidWinnerConfirmation.username(),
+                    bidWinnerConfirmation.userFirstName(),
+                    bidWinnerConfirmation.userLastName(),
+                    bidWinnerConfirmation.userEmail(),
+                    bidWinnerConfirmation.bidAmount(),
+                    bidWinnerConfirmation.bidTime(),
+                    bidWinnerConfirmation.productId(),
+                    bidWinnerConfirmation.productName(),
+                    bidWinnerConfirmation.brandName(),
+                    bidWinnerConfirmation.description()
             );
 
 
