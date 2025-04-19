@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bid Confirmation</title>
+    <title>Bid Winning Confirmation</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -82,19 +83,19 @@
 <body>
 <div class="container">
     <div class="header">
-        <h1>Bid Confirmation</h1>
+        <h1>Bid Winning Confirmation</h1>
     </div>
     <div class="content">
-        <p>Dear <strong>{{username}}</strong>,</p>
+        <p>Dear <strong th:text="${username}"></strong>,</p>
         <p>Thank you for placing a bid on our auction platform! We are pleased to inform you that your bid has been successfully received.</p>
         <p>Here are the details of your bid:</p>
 
         <div class="product-info">
             <h3>Bid Details:</h3>
-            <p><strong>Bid ID:</strong> {{bidId}}</p>
-            <p><strong>Product:</strong> {{productName}}</p>
-            <p><strong>Bid Amount:</strong> ${{bidAmount}}</p>
-            <p><strong>Bid Date:</strong> {{bidDate}}</p>
+            <p>Bid ID: <span th:text="${bidId}"></span></p>
+            <p>Product: <span th:text="${productName}"></span></p>
+            <p>Bid Amount: $<span th:text="${bidAmount}"></span></p>
+            <p>Bid Date: <span th:text="${bidDate}"></span></p>
         </div>
 
         <p>We appreciate your participation and wish you the best of luck!</p>
