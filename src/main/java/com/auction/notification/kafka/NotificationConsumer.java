@@ -3,7 +3,6 @@ package com.auction.notification.kafka;
 import com.auction.notification.email.EmailService;
 import com.auction.notification.kafka.bid.BidWinnerConfirmation;
 import com.auction.notification.kafka.order.OrderConfirmation;
-import com.auction.notification.kafka.payment.PaymentConfirmation;
 import com.auction.notification.kafka.payment.PaymentNotificationRequest;
 import com.auction.notification.notification.Notification;
 import com.auction.notification.notification.NotificationRepository;
@@ -38,7 +37,6 @@ public class NotificationConsumer {
                             .build()
             );
 
-           // var userFullName = paymentConfirmation.userFirstName() + " " + paymentConfirmation.userLastName();
             emailService.sendPaymentSuccessEmail(
                     paymentConfirmation.orderReference(),
                     paymentConfirmation.totalAmount(),
@@ -65,7 +63,6 @@ public class NotificationConsumer {
                             .orderConfirmation((orderConfirmation))
                             .build()
             );
-            //var userFullName = orderConfirmation.userFirstName() + " " + paymentConfirmation.userLastName();
             emailService.sendOrderConfirmationEmail(
                     orderConfirmation.email(),
                     orderConfirmation.username(),
@@ -93,7 +90,7 @@ public class NotificationConsumer {
                             .bidWinnerConfirmation((bidWinnerConfirmation))
                             .build()
             );
-            //var userFullName = bidWinnerConfirmation.user().firstName() + " " + bidWinnerConfirmation.user().lastName();
+
             emailService.sendBidWinnerConfirmationEmail(
                     bidWinnerConfirmation.winningBidId(),
                     bidWinnerConfirmation.bidId(),
@@ -108,7 +105,6 @@ public class NotificationConsumer {
                     bidWinnerConfirmation.brandName(),
                     bidWinnerConfirmation.description()
             );
-
 
         } catch (Exception e) {
             log.error("Failed to process bid winner notification: {}", bidWinnerConfirmation.winningBidId(), e);

@@ -20,7 +20,6 @@ import java.time.LocalDateTime;
 public class Notification {
 
     @Id
-   // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     private NotificationType type;
     private LocalDateTime notificationDate;
